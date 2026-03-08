@@ -8,14 +8,11 @@ import {
 } from 'react-native';
 import {
   Bell,
-  Compass,
-  LayoutGrid,
   Plus,
-  Sparkles,
   Timer,
-  TrendingUp,
   Users2,
 } from 'lucide-react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
 import {
   LiquidGlassContainerView,
   LiquidGlassView,
@@ -61,9 +58,34 @@ const PREDICTIONS: Prediction[] = [
 ];
 
 const TABS = ['Feed', 'Leaderboard', 'Create'] as const;
+
+type BrandIconProps = {
+  size?: number;
+  color?: string;
+};
+
+const VisionIconAjna = ({ size = 20, color = '#FFFFFF' }: BrandIconProps) => (
+  <Svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+    <Circle cx="50" cy="50" r="18" stroke={color} strokeWidth="3" />
+    <Path d="M 36 41 L 64 41 L 50 64 Z" stroke={color} strokeWidth="3" strokeLinejoin="round" />
+    <Circle cx="50" cy="49" r="3" fill={color} />
+    <Path d="M 32 50 Q 18 32 4 50 Q 18 68 32 50 Z" stroke={color} strokeWidth="3" strokeLinejoin="round" />
+    <Path d="M 68 50 Q 82 32 96 50 Q 82 68 68 50 Z" stroke={color} strokeWidth="3" strokeLinejoin="round" />
+  </Svg>
+);
+
+const VisionIconNadi = ({ size = 20, color = '#FFFFFF' }: BrandIconProps) => (
+  <Svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+    <Path d="M 30 35 L 70 35 L 50 70 Z" stroke={color} strokeWidth="3.5" strokeLinejoin="round" />
+    <Path d="M 22 35 Q 6 52.5 22 70" stroke={color} strokeWidth="3.5" strokeLinecap="round" />
+    <Path d="M 78 35 Q 94 52.5 78 70" stroke={color} strokeWidth="3.5" strokeLinecap="round" />
+    <Circle cx="50" cy="46" r="4" fill={color} />
+  </Svg>
+);
+
 const TAB_META = {
-  Feed: { icon: LayoutGrid, label: 'Feed' },
-  Leaderboard: { icon: TrendingUp, label: 'Leads' },
+  Feed: { icon: VisionIconAjna, label: 'Feed' },
+  Leaderboard: { icon: VisionIconNadi, label: 'Leads' },
   Create: { icon: Plus, label: 'Create' },
 } as const;
 
@@ -104,7 +126,10 @@ export default function LiquidGlassPredictionScreen() {
         interactive
         tintColor="rgba(129,140,248,0.16)"
       >
-        <Text style={styles.brand}>VISION</Text>
+        <View style={styles.brandWrap}>
+          <VisionIconAjna size={20} color="#FFFFFF" />
+          <Text style={styles.brand}>VISION</Text>
+        </View>
         <View style={styles.tabRow}>
           {TABS.map((tab) => {
             const active = activeTab === tab;
@@ -211,10 +236,10 @@ export default function LiquidGlassPredictionScreen() {
       </View>
 
       <LiquidGlassContainerView spacing={12} style={styles.bottomDock}>
-        {TABS.map((tab, idx) => {
+        {TABS.map((tab) => {
           const active = activeTab === tab;
-          const Icon =
-            idx === 0 ? Compass : idx === 1 ? Sparkles : Bell;
+          const Icon = TAB_META[tab].icon;
+          const iconColor = active ? '#FFFFFF' : 'rgba(255,255,255,0.6)';
           return (
             <TouchableOpacity
               key={`bottom-${tab}`}
@@ -229,7 +254,14 @@ export default function LiquidGlassPredictionScreen() {
                 interactive
                 tintColor={active ? 'rgba(129,140,248,0.22)' : 'rgba(255,255,255,0.06)'}
               >
-                <Icon size={18} color={active ? '#FFFFFF' : 'rgba(255,255,255,0.6)'} />
+                {tab === 'Create' ? (
+                  <View style={styles.createGlyphWrap}>
+                    <Bell size={10} color={iconColor} />
+                    <Plus size={14} color={iconColor} />
+                  </View>
+                ) : (
+                  <Icon size={18} color={iconColor} />
+                )}
                 {active && <Text style={[styles.bottomText, active && styles.bottomTextActive]}>{tab}</Text>}
               </LiquidGlassView>
             </TouchableOpacity>
@@ -291,7 +323,12 @@ const styles = StyleSheet.create({
     letterSpacing: 2.8,
     fontSize: 11,
     fontWeight: '800',
-    marginLeft: 10,
+    marginLeft: 8,
+  },
+  brandWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   tabRow: {
     flexDirection: 'row',
@@ -453,5 +490,10 @@ const styles = StyleSheet.create({
   },
   bottomTextActive: {
     color: '#FFFFFF',
+  },
+  createGlyphWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
   },
 });
