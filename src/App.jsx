@@ -688,7 +688,200 @@ const LeaderboardScreen = () => {
   );
 };
 
-const ProfileScreen = ({ name, setName, hasChangedName, setHasChangedName }) => {
+const RatingLadderModal = ({ isOpen, onClose }) => {
+  const RANKS = [
+    { name: 'Visionary', min: 5000, icon: Crown, color: 'text-amber-400', bg: 'bg-amber-500/10', glow: 'shadow-[0_0_30px_rgba(251,191,36,0.5)]', border: 'border-amber-400/50', gradient: 'from-amber-500/20 to-transparent' },
+    { name: 'Oracle', min: 2500, icon: Sparkles, color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', glow: 'shadow-[0_0_25px_rgba(232,121,249,0.3)]', border: 'border-fuchsia-400/30', gradient: 'from-fuchsia-500/20 to-transparent' },
+    { name: 'Sage', min: 1550, icon: Zap, color: 'text-purple-400', bg: 'bg-purple-500/10', glow: 'shadow-[0_0_20px_rgba(192,132,252,0.2)]', border: 'border-purple-400/20', gradient: 'from-purple-500/20 to-transparent' },
+    { name: 'Strategist', min: 1000, icon: Target, color: 'text-indigo-400', bg: 'bg-indigo-500/20', glow: 'shadow-[0_0_25px_rgba(129,140,248,0.4)]', border: 'border-indigo-400/50', gradient: 'from-indigo-500/30 to-indigo-900/10', current: true },
+    { name: 'Seeker', min: 500, icon: Rocket, color: 'text-blue-400', bg: 'bg-blue-500/5', glow: 'shadow-[0_0_15px_rgba(96,165,250,0.15)]', border: 'border-blue-400/20', gradient: 'from-blue-500/10 to-transparent' },
+    { name: 'Novice', min: 0, icon: User, color: 'text-zinc-400', bg: 'bg-zinc-500/5', glow: '', border: 'border-zinc-400/10', gradient: 'from-zinc-500/5 to-transparent' },
+  ];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 z-[100] bg-black/60 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="absolute bottom-0 left-0 w-full h-[85vh] bg-[#050505] border-t border-white/[0.08] rounded-t-[2.5rem] z-[101] flex flex-col shadow-[0_-20px_60px_rgba(0,0,0,0.8)] overflow-hidden"
+          >
+            {/* Cinematic Background Blur */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[300px] bg-indigo-500/10 blur-[100px] pointer-events-none rounded-[100%]" />
+
+            <div className="w-full flex justify-center py-4 relative z-10">
+              <div className="w-12 h-1.5 bg-white/10 rounded-full" />
+            </div>
+
+            <div className="px-8 pb-6 border-b border-white/[0.04] flex justify-between items-center relative z-10">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-[24px] font-black text-white flex items-center gap-3 tracking-tight">
+                  <Crown size={24} className="text-yellow-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.6)]" /> Forecast Ladder
+                </h2>
+                <span className="text-[12px] text-white/40 font-medium tracking-wide">Climb to the top by generating Aura</span>
+              </div>
+              <button onClick={onClose} className="p-2.5 bg-white/[0.03] border border-white/[0.05] rounded-full text-white/50 hover:text-white hover:bg-white/[0.08] transition-all">
+                <XCircle size={22} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto no-scrollbar p-8 flex flex-col relative z-10">
+              <div className="flex flex-col gap-6 relative">
+                {/* Cinematic Glowing Connecting Line */}
+                <div className="absolute left-[27px] top-[30px] bottom-[30px] w-1 rounded-full bg-gradient-to-b from-amber-500 via-indigo-500 to-zinc-800 opacity-50 shadow-[0_0_15px_rgba(99,102,241,0.5)] z-0" />
+
+                {RANKS.map((rank, i) => {
+                  const RankIcon = rank.icon;
+                  const isVisionary = rank.name === 'Visionary';
+
+                  return (
+                    <motion.div
+                      key={rank.name}
+                      animate={isVisionary ? { y: [0, -4, 0] } : {}}
+                      transition={isVisionary ? { duration: 4, repeat: Infinity, ease: 'easeInOut' } : {}}
+                      className={`relative z-10 flex items-center gap-6 group transition-all duration-500 ${rank.current ? 'scale-105 my-4' : (isVisionary ? 'opacity-100 scale-[1.02] my-2' : 'opacity-60 hover:opacity-100')}`}
+                    >
+                      {/* Magical Aura for Visionary */}
+                      {isVisionary && (
+                        <>
+                          <div className="absolute inset-0 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none -z-10" />
+                          <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }} className="absolute -left-3 -top-3 text-amber-300 opacity-60 pointer-events-none"><Sparkles size={14} /></motion.div>
+                          <motion.div animate={{ rotate: -360, scale: [1, 1.5, 1] }} transition={{ duration: 5, repeat: Infinity, ease: "linear" }} className="absolute -bottom-2 left-12 text-amber-500 opacity-40 pointer-events-none"><Sparkles size={10} /></motion.div>
+                        </>
+                      )}
+
+                      {/* Active Rank Pulse Effect */}
+                      {(rank.current || isVisionary) && (
+                        <div className={`absolute left-0 w-[58px] h-[58px] rounded-full ${rank.bg} blur-xl animate-pulse -z-10`} />
+                      )}
+
+                      <div className={`relative w-[58px] h-[58px] rounded-full shrink-0 flex items-center justify-center bg-[#0a0a0a] border-[3px] shadow-xl transition-all duration-500
+                        ${rank.current || isVisionary ? rank.border + ' ' + rank.glow : 'border-white/[0.05] group-hover:border-white/[0.2]'}
+                      `}>
+                        {isVisionary && <motion.div animate={{ opacity: [0.3, 0.8, 0.3] }} transition={{ duration: 2, repeat: Infinity }} className="absolute inset-0 rounded-full shadow-[inset_0_0_20px_rgba(251,191,36,0.4)] pointer-events-none" />}
+                        <RankIcon size={isVisionary ? 28 : 24} className={`${rank.color} relative z-10 transition-all duration-500 ${rank.current || isVisionary ? 'drop-shadow-[0_0_15px_currentColor] scale-110' : ''}`} />
+                      </div>
+
+                      <div className={`flex-1 flex flex-col justify-center bg-gradient-to-r ${rank.gradient} border ${rank.current || isVisionary ? rank.border + ' ' + rank.glow : 'border-white/[0.03] group-hover:border-white/[0.08]'} p-5 rounded-3xl backdrop-blur-md relative overflow-hidden transition-all duration-500`}>
+                        {/* Shimmer Sweep exactly for Visionary */}
+                        {isVisionary && (
+                          <motion.div
+                            animate={{ x: ['-200%', '300%'] }}
+                            transition={{ duration: 3.5, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+                            className="absolute top-0 bottom-0 w-[40%] bg-gradient-to-r from-transparent via-amber-200/20 to-transparent skew-x-[-25deg] pointer-events-none"
+                          />
+                        )}
+                        {(rank.current || isVisionary) && <div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />}
+
+                        <div className="flex justify-between items-center mb-1">
+                          <span className={`text-[18px] font-black tracking-wide ${rank.color} drop-shadow-md`}>{rank.name}</span>
+                          <span className="text-[16px] font-black text-white/80">{rank.min.toLocaleString()}<span className="text-[12px] text-white/30 ml-1 uppercase font-bold tracking-widest">Aura</span></span>
+                        </div>
+
+                        {rank.current && (
+                          <div className="w-fit text-[9px] text-white font-bold uppercase tracking-[0.2em] bg-white/10 px-3 py-1.5 rounded-full border border-white/[0.05] mt-2 flex items-center gap-1.5 shadow-sm">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" /> Current Rank
+                          </div>
+                        )}
+                        {isVisionary && !rank.current && (
+                          <div className="w-fit text-[9px] text-amber-300 font-bold uppercase tracking-[0.2em] bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/20 mt-2 flex items-center gap-1.5 shadow-sm">
+                            <Sparkles size={10} className="text-amber-400" /> Supreme Level
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const NetworkModal = ({ isOpen, onClose, type }) => {
+  const [networkUsers, setNetworkUsers] = useState([
+    { id: 1, name: 'Ashpak', isFollowing: true, username: '@ashpak99' },
+    { id: 2, name: 'Ekansh', isFollowing: false, username: '@ekanshxo' },
+    { id: 3, name: 'KVD', isFollowing: true, username: '@kvd_designs' }
+  ]);
+
+  const handleToggleFollow = (id) => {
+    setNetworkUsers(users =>
+      users.map(u => u.id === id ? { ...u, isFollowing: !u.isFollowing } : u)
+    );
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 z-[100] bg-black/40 backdrop-blur-md"
+          />
+          <motion.div
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="absolute bottom-0 left-0 w-full h-[75vh] bg-black/60 backdrop-blur-3xl border-t border-white/[0.15] rounded-t-[2.5rem] z-[101] flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"
+          >
+            <div className="w-full flex justify-center py-4">
+              <div className="w-12 h-1.5 bg-white/20 rounded-full" />
+            </div>
+
+            <div className="px-6 pb-4 border-b border-white/5 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white capitalize">{type}</h2>
+              <button onClick={onClose} className="p-2 bg-white/5 rounded-full text-white/50 hover:text-white transition-colors">
+                <XCircle size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto no-scrollbar p-6 flex flex-col gap-4">
+              {networkUsers.map((user) => (
+                <div key={user.id} className="flex justify-between items-center bg-white/[0.03] border border-white/[0.05] p-3 rounded-[1.25rem] shadow-[inset_0_1px_10px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                      <User size={16} className="text-white/70" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[14px] font-bold text-white tracking-wide leading-none">{user.name}</span>
+                      <span className="text-[11px] text-white/50 font-medium tracking-wide mt-1">{user.username}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleToggleFollow(user.id)}
+                    className={`px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all shadow-md ${user.isFollowing ? 'bg-white/[0.05] border border-white/[0.1] text-white/70 hover:bg-white/[0.1] hover:text-white' : 'bg-indigo-500 text-white hover:bg-indigo-400 border border-indigo-400/50 drop-shadow-[0_0_8px_rgba(99,102,241,0.5)]'}`}
+                  >
+                    {user.isFollowing ? 'Following' : 'Follow'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const ProfileScreen = ({ name, setName, hasChangedName, setHasChangedName, onOpenNetwork, onOpenRating }) => {
   const [city, setCity] = useState('Bengaluru');
   const [isEditingName, setIsEditingName] = useState(false);
 
@@ -765,7 +958,11 @@ const ProfileScreen = ({ name, setName, hasChangedName, setHasChangedName }) => 
             { label: 'Followers', icon: Users },
             { label: 'Badges', icon: Award }
           ].map((action, i) => (
-            <button key={i} className="flex-1 py-3.5 bg-white/[0.03] border border-white/[0.05] rounded-2xl flex flex-col items-center gap-2 hover:bg-white/[0.06] transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+            <button
+              key={i}
+              onClick={() => onOpenNetwork(action.label)}
+              className="flex-1 py-3.5 bg-white/[0.03] border border-white/[0.05] rounded-2xl flex flex-col items-center gap-2 hover:bg-white/[0.06] transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] outline-none"
+            >
               <action.icon size={20} className="text-white/60" />
               <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-white/50">{action.label}</span>
             </button>
@@ -780,7 +977,12 @@ const ProfileScreen = ({ name, setName, hasChangedName, setHasChangedName }) => 
           </div>
 
           {/* Forecast Rating Lead Card */}
-          <div className="bg-gradient-to-br from-indigo-500/20 via-indigo-600/10 to-purple-500/10 border border-indigo-400/30 rounded-[2rem] p-6 relative overflow-hidden group shadow-[0_8px_32px_rgba(79,70,229,0.2)]">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onOpenRating}
+            className="w-full text-left bg-gradient-to-br from-indigo-500/20 via-indigo-600/10 to-purple-500/10 border border-indigo-400/30 rounded-[2rem] p-6 relative overflow-hidden group shadow-[0_8px_32px_rgba(79,70,229,0.2)] outline-none"
+          >
             <div className="absolute inset-0 bg-indigo-500/10 blur-2xl group-hover:bg-indigo-500/30 transition-all duration-500 pointer-events-none" />
             <div className="relative z-10 flex flex-col">
               <div className="flex items-center justify-between mb-2">
@@ -817,7 +1019,7 @@ const ProfileScreen = ({ name, setName, hasChangedName, setHasChangedName }) => 
                 </span>
               </div>
             </div>
-          </div>
+          </motion.button>
 
           <div className="flex gap-4">
             <div className="flex-1 bg-white/[0.02] border border-white/[0.04] rounded-3xl p-5 flex flex-col border-t-white/[0.08]">
@@ -881,7 +1083,7 @@ const ProfileScreen = ({ name, setName, hasChangedName, setHasChangedName }) => 
           </div>
         </div>
       </div>
-    </motion.div>
+    </motion.div >
   );
 };
 
@@ -940,18 +1142,109 @@ const ActivityScreen = () => {
 // Assuming Activity is imported as ActivityIcon natively earlier but aliased or standard Activity works
 const ActivityIcon = Activity;
 
+const CommentItem = ({ comment, allComments, onReply, onLike, likedComments, depth = 0 }) => {
+  const children = allComments.filter(c => c.parentId === comment.id);
+
+  return (
+    <div className={`flex flex-col ${depth > 0 ? 'ml-4 sm:ml-6 pl-3 sm:pl-4 border-l-2 border-white/10 mt-3' : 'mt-5'}`}>
+      <div className="flex gap-3">
+        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+          <User size={14} className="text-white/70" />
+        </div>
+        <div className="flex flex-col flex-1">
+          <div className="flex justify-between items-start">
+            <div className="flex flex-col flex-1 pr-4">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-[13px]">{comment.user}</span>
+                <span className="text-white/40 text-[10px] uppercase font-bold tracking-wider">{comment.time}</span>
+              </div>
+              <p className="text-white/80 text-[14px] leading-relaxed mt-1 whitespace-pre-wrap break-words">
+                {comment.text}
+              </p>
+              <button
+                onClick={() => onReply(comment)}
+                className="text-[11px] font-bold text-white/40 hover:text-white mt-2 w-max transition-colors"
+              >
+                Reply
+              </button>
+            </div>
+
+            <div className="flex flex-col items-center gap-1.5 mt-1 relative z-10">
+              <button
+                onClick={() => onLike(comment.id)}
+                className="text-white/40 hover:text-white transition-colors group p-1"
+              >
+                <motion.div
+                  animate={likedComments[comment.id] ? { scale: [1, 1.5, 1] } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <Heart
+                    size={15}
+                    className={`transition-colors ${likedComments[comment.id] ? 'fill-red-500 text-red-500 hover:fill-red-400 hover:text-red-400' : 'group-hover:scale-110 group-active:scale-90'}`}
+                  />
+                </motion.div>
+              </button>
+              <span className={`text-[10px] font-bold transition-colors ${likedComments[comment.id] ? 'text-red-500' : 'text-white/40'}`}>
+                {comment.likes + (likedComments[comment.id] ? 1 : 0)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {children.map(child => (
+        <CommentItem
+          key={child.id}
+          comment={child}
+          allComments={allComments}
+          onReply={onReply}
+          onLike={onLike}
+          likedComments={likedComments}
+          depth={depth + 1}
+        />
+      ))}
+    </div>
+  );
+};
+
 const CommentsModal = ({ isOpen, onClose, prediction }) => {
   const [newComment, setNewComment] = useState('');
+  const [replyingTo, setReplyingTo] = useState(null);
   const [comments, setComments] = useState([
-    { id: 1, user: 'Ashpak', text: 'This is actually very possible given the current pace!', time: '2h' },
-    { id: 2, user: 'Ekansh', text: 'Nah, timeline is too short. There are hardware bottlenecks.', time: '5h' }
+    { id: 1, parentId: null, user: 'Ashpak', text: 'This is actually very possible given the current pace!', time: '2h', likes: 142 },
+    { id: 2, parentId: null, user: 'Ekansh', text: 'Nah, timeline is too short. There are hardware bottlenecks.', time: '5h', likes: 38 },
+    { id: 3, parentId: 1, user: 'KVD', text: 'Totally agree, the architectural shifts are compounding quickly.', time: '1h', likes: 24 }
   ]);
+  const [likedComments, setLikedComments] = useState({});
+  const inputRef = React.useRef(null);
 
   const handlePost = () => {
     if (newComment.trim()) {
-      setComments([{ id: Date.now(), user: 'Srikant', text: newComment, time: 'Just now' }, ...comments]);
+      setComments([{
+        id: Date.now(),
+        parentId: replyingTo ? replyingTo.id : null,
+        user: 'Srikant',
+        text: newComment,
+        time: 'Just now',
+        likes: 0
+      }, ...comments]);
       setNewComment('');
+      setReplyingTo(null);
     }
+  };
+
+  const handleReply = (comment) => {
+    setReplyingTo(comment);
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 10);
+  };
+
+  const toggleLike = (id) => {
+    setLikedComments(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   return (
@@ -983,45 +1276,47 @@ const CommentsModal = ({ isOpen, onClose, prediction }) => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto no-scrollbar p-6 flex flex-col gap-6">
-              {comments.map((comment) => (
-                <div key={comment.id} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                    <User size={14} className="text-white/70" />
-                  </div>
-                  <div className="flex flex-col flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-white text-[13px]">{comment.user}</span>
-                      <span className="text-white/40 text-[10px] uppercase font-bold tracking-wider">{comment.time}</span>
-                    </div>
-                    <p className="text-white/80 text-[14px] leading-relaxed mt-1">
-                      {comment.text}
-                    </p>
-                    <button className="text-[11px] font-bold text-white/40 hover:text-white mt-2 w-max transition-colors">
-                      Reply
-                    </button>
-                  </div>
-                </div>
+            <div className="flex-1 overflow-y-auto no-scrollbar px-6 flex flex-col pb-6">
+              {comments.filter(c => c.parentId === null).map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  allComments={comments}
+                  onReply={handleReply}
+                  onLike={toggleLike}
+                  likedComments={likedComments}
+                />
               ))}
             </div>
 
-            <div className="p-4 border-t border-white/5 bg-white/[0.02] pb-8">
-              <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full p-1 pl-4">
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handlePost()}
-                  className="flex-1 bg-transparent text-[14px] text-white outline-none placeholder:text-white/40"
-                />
-                <button
-                  onClick={handlePost}
-                  disabled={!newComment.trim()}
-                  className="p-2 bg-indigo-500 rounded-full text-white disabled:opacity-50 disabled:bg-white/10 transition-colors"
-                >
-                  <ArrowRight size={18} />
-                </button>
+            <div className="flex flex-col border-t border-white/5 bg-white/[0.02]">
+              {replyingTo && (
+                <div className="flex justify-between items-center px-6 py-2 bg-indigo-500/10 border-b border-indigo-500/20">
+                  <span className="text-[11px] font-bold text-indigo-300">Replying to {replyingTo.user}</span>
+                  <button onClick={() => setReplyingTo(null)} className="text-indigo-400 hover:text-indigo-300">
+                    <XCircle size={14} />
+                  </button>
+                </div>
+              )}
+              <div className="p-4 pb-8">
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full p-1 pl-4 focus-within:border-white/30 transition-colors">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handlePost()}
+                    className="flex-1 bg-transparent text-[14px] text-white outline-none placeholder:text-white/40"
+                  />
+                  <button
+                    onClick={handlePost}
+                    disabled={!newComment.trim()}
+                    className="p-2 bg-indigo-500 rounded-full text-white disabled:opacity-50 disabled:bg-white/10 transition-colors"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -1045,6 +1340,9 @@ export default function App() {
   // Social State
   const [likedPredictions, setLikedPredictions] = useState({});
   const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+  const [isNetworkModalOpen, setIsNetworkModalOpen] = useState(false);
+  const [networkType, setNetworkType] = useState('Following');
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
 
   const currentPrediction = PREDICTIONS[currentIndex];
   const isLiked = likedPredictions[currentPrediction.id];
@@ -1054,6 +1352,12 @@ export default function App() {
       ...prev,
       [currentPrediction.id]: !prev[currentPrediction.id]
     }));
+  };
+
+  const openNetworkInfo = (type) => {
+    if (type === 'Badges') return;
+    setNetworkType(type);
+    setIsNetworkModalOpen(true);
   };
 
   const handleLogoClick = () => {
@@ -1348,6 +1652,8 @@ export default function App() {
                 setName={setUserName}
                 hasChangedName={hasChangedName}
                 setHasChangedName={setHasChangedName}
+                onOpenNetwork={openNetworkInfo}
+                onOpenRating={() => setIsRatingModalOpen(true)}
               />
             ) : null}
           </AnimatePresence>
@@ -1405,6 +1711,15 @@ export default function App() {
           isOpen={isCommentsModalOpen}
           onClose={() => setIsCommentsModalOpen(false)}
           prediction={currentPrediction}
+        />
+        <NetworkModal
+          isOpen={isNetworkModalOpen}
+          onClose={() => setIsNetworkModalOpen(false)}
+          type={networkType}
+        />
+        <RatingLadderModal
+          isOpen={isRatingModalOpen}
+          onClose={() => setIsRatingModalOpen(false)}
         />
       </div>
     </div>
