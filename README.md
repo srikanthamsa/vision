@@ -1,72 +1,68 @@
-# Vision
+<div align="center">
+  <img src="https://i.ibb.co/6803hQe/vision-logo-placeholder.png" alt="Vision Logo" width="120" />
+</div>
 
-A modern React web application built with Vite, Tailwind CSS, and Framer Motion.
+# VISION
 
-## 🚀 Features
+**Where foresight becomes social currency.**
 
-- **React 18** - Modern React features for building user interfaces.
-- **Vite** - Lightning fast cold server start and instant HMR.
-- **Tailwind CSS** - A utility-first CSS framework for rapid UI development.
-- **Framer Motion** - Production-ready motion library for React.
-- **Lucide React** - Beautiful and consistent icons.
+Vision is a deeply engaging, next-generation prediction market designed exclusively for the mobile experience. Built with a stunning dark-mode glassmorphic aesthetic, Vision gamifies the future—allowing users to stake their reputation, climb the ranks from *Novice* to *Visionary*, and build a competitive track record based entirely on their predictive accuracy. 
 
-## 🛠️ Prerequisites
+It is not just about guessing what happens next; it is about proving you saw it coming.
 
-Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
+---
 
-## 📦 Getting Started
+## 🌟 The Pitch
 
-### 1. Clone the repository
+The modern internet is flooded with opinions, but there is no accountability for who is actually right. Vision transforms "hot takes" into a quantifiable, social game. 
 
+Whether it's the next monumental shift in AI, the outcome of a World Cup finale, or the timeline of a major tech release, Vision lets you stake your **Aura** on the outcome. 
+
+We merge the addictive progression mechanics of gaming (XP, leaderboards, unlockable cosmetics) with the intellectual thrill of forecasting (ELO systems, shifting odds, risk multipliers). The result? A highly retentive, intensely social platform where genuine insight is visually rewarded, and the best predictors are crowned as *Visionaries*.
+
+---
+
+## 🔮 Core Mechanics
+
+### 1. The Aura Engine (XP & Engagement)
+Aura is the lifeblood of your profile—a reflection of your influence and activity. You earn Aura by creating compelling predictions, casting votes, defending your stance in the comments, and onboarding new users. 
+* **Aura only goes up.** It tracks your sheer social impact.
+* Climbing the **Aura Ladder** (*Novice → Seeker → Strategist → Sage → Oracle → Visionary*) unlocks exclusive profile traits, badges, and glowing UI cosmetics. 
+
+### 2. Forecast Rating (ELO & Accuracy)
+While Aura shows how active you are, your Forecast Rating exposes how *right* you are. It is a zero-sum metric.
+* **Forecast Rating is fluid.** You lose points when you are wrong and gain points when you are right.
+* **Risk vs. Reward:** Correctly predicting an underdog or "Hot Take" event grants massive rating boosts (+65), while playing it safe on widely agreed outcomes yields smaller gains (+5). 
+
+### 3. The Visionary State
+Users who grind their way to the ultimate *Visionary* tier (5,000+ Aura) don't just get a badge—their entire profile UI transforms. The standard indigo theme is overridden by a radiant, animated golden layout featuring ambient pulsing auras, diagonal light shimmers, and maximum rank prestige. 
+
+---
+
+## 🛠️ The Tech Stack (Current Prototype)
+
+Vision is currently built as a high-fidelity web prototype engineered to perfectly simulate a native mobile application, ensuring rapid iteration for investor demonstrations prior to the Capacitor/React Native port.
+
+* **Framework:** React 18 (Vite)
+* **Styling:** Tailwind CSS (Utility-first, heavily utilizing custom glassmorphism, blur variants, and complex gradients)
+* **Animations:** Framer Motion (Orchestrating complex layout transitions, shimmering states, and gesture-driven liquid bottom navigation)
+* **Iconography:** Lucide React
+
+---
+
+## 📱 Running the Prototype
+
+### 1. Clone & Install
 ```bash
-git clone https://github.com/srikanthamsa/vision.git
+git clone https://github.com/[your-repo]/vision.git
 cd vision
-```
-
-### 2. Install dependencies
-
-```bash
 npm install
 ```
 
-### 3. Run the development server
-
+### 2. Launch Development Server
 ```bash
 npm run dev
 ```
+The prototype will be live at `http://localhost:5173`. 
 
-The application will be available at `http://localhost:5173`.
-
-## 🏗️ Build for Production
-
-To create a production build, run:
-
-```bash
-npm run build
-```
-
-This will generate a `dist` folder containing the optimized production-ready files. You can preview the production build locally using:
-
-```bash
-npm run preview
-```
-
-## 📁 Project Structure
-
-```
-vision/
-├── public/           # Static assets
-├── src/
-│   ├── assets/       # Images, fonts, etc.
-│   ├── components/   # Reusable React components
-│   ├── App.jsx       # Main application component
-│   └── main.jsx      # Entry point
-├── index.html        # HTML template
-├── package.json      # Dependencies and scripts
-├── tailwind.config.js# Tailwind CSS configuration
-└── vite.config.js    # Vite configuration
-```
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+*(Note: For the intended mobile experience, open the dev tools in your browser and toggle device emulation to an iPhone Pro / Android equivalent).*
